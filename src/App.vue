@@ -1,32 +1,64 @@
 <template>
   <div id="app">
-    <div id="nav">
-      <router-link to="/">Home</router-link> |
-      <router-link to="/about">About</router-link>
+    <Backdrop v-if='getState("open") || getState("popup")' />
+    <div id="link">
+      <button v-if='this.$route.path !== "/"' class='routeButton' @click='routeTo'>Return to Todo List</button>
     </div>
     <router-view/>
   </div>
 </template>
 
+<script>
+import Backdrop from '@/components/UI/Backdrop'
+import {mapGetters, mapMutations} from 'vuex'
+
+export default {
+  computed: mapGetters(['getState']),
+
+  methods: {
+    ...mapMutations(['initialState', 'changeBackup']),
+    routeTo(){
+      this.$router.push('/')
+
+      // Set previous/saved state of Todos
+      this.initialState()
+      localStorage.setItem('localtodo', JSON.stringify([]))
+
+      // Turn off backup popup in Editing
+      this.changeBackup(false)
+    }
+  },
+
+  components: {
+    Backdrop
+  },
+}
+</script>
+
 <style>
+*{
+  font-family: 'montserrat', sans-serif;
+  box-sizing: border-box;
+}
+body{
+  background-image: linear-gradient(120deg, #487eb0, #fbc531);
+  min-height: 700px;
+}
 #app {
-  font-family: Avenir, Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   text-align: center;
   color: #2c3e50;
 }
-
-#nav {
-  padding: 30px;
-}
-
-#nav a {
-  font-weight: bold;
-  color: #2c3e50;
-}
-
-#nav a.router-link-exact-active {
-  color: #42b983;
+.routeButton{
+  margin: 10px 0;
+  width: 300px;
+  height: 20px;
+  outline: none;
+  font-size: 24px;
+  cursor: pointer;
+  background: none;
+  border: none;
+  color: rgba(255, 255, 255, .5);
 }
 </style>
