@@ -1,44 +1,52 @@
 <template>
-    <div class='pop-up'>
-        <p>Are you sure you want to do this?</p>
-        <div class='buttons'>
-            <button class='cancel' @click="changePopup(id)">Cancel</button>
-            <button class='confirm' @click="popupBtns(type)">Confirm</button>
-        </div>
+  <div class='pop-up'>
+    <p>Are you sure you want to do this?</p>
+    <div class='buttons'>
+      <button
+        class='cancel'
+        @click="changePopup(id)">
+        Cancel
+      </button>
+      <button
+        class='confirm'
+        @click="popupBtns(type)">
+        Confirm
+      </button>
     </div>
+  </div>
 </template>
 
 <script>
-import {mapMutations} from 'vuex'
+  import {mapMutations} from 'vuex'
 
-export default {
+  export default {
     props: ['type', 'id'],
 
     methods: {
-        ...mapMutations(['changePopup', 'deleteTodoBox', 'initialState', 'changeBackup', 'changeTemp']),
+      ...mapMutations(['changePopup', 'deleteTodoBox', 'initialState', 'changeBackup', 'changeTemp']),
 
-        // Check for type of button click
-        popupBtns(type){
-            this.changePopup(this.id)
+      // Check for type of button click
+      popupBtns(type){
+        this.changePopup(this.id)
 
-            // Delete exact TodoBox
-            if(type === 'delete'){
-                this.deleteTodoBox()
-                this.changeBackup(false)
-                this.changeTemp([])
-                if (this.$route.path !== '/') this.$router.push('/')
-            }else if (type === 'cancel'){
+        // Delete exact TodoBox
+        if(type === 'delete'){
+          this.deleteTodoBox()
+          this.changeBackup(false)
+          this.changeTemp([])
+          if (this.$route.path !== '/') this.$router.push('/')
+        }else if (type === 'cancel'){
 
-            // Canceling changes in editing page
-                this.$emit('get-initial')
-                this.changeBackup(true)
-            }
-
-            // Set previous/saved state of Todos
-            // this.initialState()
+          // Canceling changes in editing page
+          this.$emit('get-initial')
+          this.changeBackup(true)
         }
+
+        // Set previous/saved state of Todos
+        // this.initialState()
+      }
     }
-}
+  }
 </script>
 
 <style scoped>

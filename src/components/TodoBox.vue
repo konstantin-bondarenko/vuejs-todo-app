@@ -1,42 +1,46 @@
 <template>
-    <div class='box'>
-        <h3>{{ todo.title }}</h3>
-        <div v-for='(item, i) in todo.content' v-bind:key='i'>
-            <TodoItem
-                v-bind:td='item'
-                v-bind:checkbox='false'
-            />
-        </div>
-        <div class='buttons'>
-            <button class='edit' @click='toEdit(todo)'>EDIT</button>
-            <button class='delete' @click="$emit('recive-id', todo.id)">DELETE</button>
-
-        </div>
+  <div class='box'>
+    <h3>{{ todo.title }}</h3>
+    <div
+      v-for='(item, i) in todo.content'
+      v-bind:key='i'>
+      <c-todo-item
+        v-bind:td='item'
+        v-bind:checkbox='false'/>
     </div>
+    <div class='buttons'>
+      <button
+        class='edit'
+        @click='toEdit(todo)'>
+        EDIT
+      </button>
+      <button
+        class='delete'
+        @click="$emit('recive-id', todo.id)">
+        DELETE
+      </button>
+
+    </div>
+  </div>
 </template>
 
 <script>
-import TodoItem from '@/components/TodoItem'
-import {mapMutations} from 'vuex'
+  import {mapMutations} from 'vuex'
 
-export default {
+  export default {
     props: ['todo'],
 
     methods: {
-        ...mapMutations(['changeEditing']),
+      ...mapMutations(['changeEditing']),
 
-        // Redirect to Editing page and pass exact TodoBox
-        toEdit(todo){
-            this.$router.push({ name: 'edit', params: todo})
-            this.changeEditing(todo)
-            localStorage.setItem('localtodo', JSON.stringify(todo))
-        }
-    },
-    
-    components: {
-        TodoItem
-    },
-}
+      // Redirect to Editing page and pass exact TodoBox
+      toEdit(todo){
+        this.$router.push({ name: 'edit', params: todo})
+        this.changeEditing(todo)
+        localStorage.setItem('localtodo', JSON.stringify(todo))
+      }
+    }
+  }
 </script>
 
 <style scoped>

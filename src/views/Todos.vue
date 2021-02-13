@@ -1,56 +1,47 @@
 <template>
   <div>
     <h2>ToDo application</h2>
-    <button @click='changeOpen'>CREATE</button>
-    <Popup 
+    <button @click='toggleOpen'>
+      CREATE
+    </button>
+    <c-popup
       v-if='getState("popup")'
       v-bind:type="'delete'"
-      v-bind:id='id'
-    />
-    <Modal 
-      v-if='getState("open")'
-    />
+      v-bind:id='id'/>
+    <c-modal
+      v-if='getState("open")'/>
     <div id='boxes'>
-      <TodoBox
+      <c-todo-box
         v-for='(todo, i) of getState("todos")'
         v-bind:key='i'
         v-bind:todo='todo'
-        @recive-id='reciveId'
-      />
+        @recive-id='reciveId'/>
     </div>
   </div>
 </template>
 
 <script>
+  import {mapGetters, mapActions} from 'vuex'
 
-import Modal from '@/components/Modal'
-import TodoBox from '@/components/TodoBox'
-import Popup from '@/components/Popup'
-import {mapGetters, mapMutations} from 'vuex'
+  export default {
+    data(){
+      return{
+        id: Number
+      }
+    },
 
-export default {
-  data(){
-    return{
-      id: Number
+    computed: mapGetters(['getState']),
+
+    methods: {
+      ...mapActions(['toggleOpen', 'togglePopup']),
+
+      // Recive id of selected TodoBox and pass to Store
+      reciveId(id){
+        this.id = id
+        this.togglePopup(id)
+      }
     }
-  },
-
-  computed: mapGetters(['getState']),
-
-  methods: {
-    ...mapMutations(['changeOpen', 'changePopup']),
-
-    // Recive id of selected TodoBox and pass to Store
-    reciveId(id){
-      this.id = id
-      this.changePopup(id)
-    }
-  },
-
-  components: {
-    TodoBox, Modal, Popup
   }
-}
 </script>
 
 

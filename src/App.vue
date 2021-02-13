@@ -1,38 +1,37 @@
 <template>
   <div id="app">
-    <Backdrop v-if='getState("open") || getState("popup")' />
+    <c-backdrop v-if='getState("open") || getState("popup")' />
     <div id="link">
-      <button v-if='this.$route.path !== "/"' class='routeButton' @click='routeTo'>Return to Todo List</button>
+      <button
+        v-if='this.$route.path !== "/"'
+        class='routeButton' @click='routeTo'>
+        Return to Todo List
+      </button>
     </div>
     <router-view/>
   </div>
 </template>
 
 <script>
-import Backdrop from '@/components/UI/Backdrop'
-import {mapGetters, mapMutations} from 'vuex'
+  import {mapGetters, mapMutations} from 'vuex'
 
-export default {
-  computed: mapGetters(['getState']),
+  export default {
+    computed: mapGetters(['getState']),
 
-  methods: {
-    ...mapMutations(['initialState', 'changeBackup']),
-    routeTo(){
-      this.$router.push('/')
+    methods: {
+      ...mapMutations(['initialState', 'changeBackup']),
+      routeTo(){
+        this.$router.push('/')
 
-      // Set previous/saved state of Todos
-      this.initialState()
-      localStorage.setItem('localtodo', JSON.stringify([]))
+        // Set previous/saved state of Todos
+        this.initialState()
+        localStorage.setItem('localtodo', JSON.stringify([]))
 
-      // Turn off backup popup in Editing
-      this.changeBackup(false)
+        // Turn off backup popup in Editing
+        this.changeBackup(false)
+      }
     }
-  },
-
-  components: {
-    Backdrop
-  },
-}
+  }
 </script>
 
 <style>

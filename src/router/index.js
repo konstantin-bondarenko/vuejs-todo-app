@@ -8,12 +8,12 @@ Vue.use(VueRouter)
 const routes = [
   {
     path: '/',
-    name: 'Todos',
+    name: 'nav.todos', // Todos
     component: Todos
   },
   {
     path: '/edit',
-    name: 'edit',
+    name: 'nav.edit', // edit
     component: Edit
   }
 ]

@@ -1,97 +1,94 @@
 <template>
-    <div class='modal' @blur="changeOpen">
-        <form @submit.prevent='onSubmit'>
-            <p>Add card</p>
-            <span v-if='!title'>Enter title</span>
-            <div v-if='getState("error") && !title'>
-                <input 
-                    class='error' 
-                    placeholder="Fill this line!">
-            </div>
-            <div
-                v-else
-                v-bind:class='{title: title}'
-                class="empty" 
-                contenteditable="true"
-                @keydown.enter="updateTask($event)"
-                @blur="updateTask($event)">
-                {{title}}
-            </div>
-        </form>
-        <AddTodo 
-            @add-content='addContent' 
-            v-bind:length='contents.length' />
-        <div class='scroll'>
-            <div
-                v-bind:key='i'
-                v-for='(td, i) of contents'>
-                <TodoItem 
-                    v-bind:td='td'
-                    v-bind:index='i'
-                    v-bind:checkbox='true'
-                    @remove-todo='removeTodo'
-                />
-            </div>
-        </div>
-        <span v-if='contents.length'>Click on the text for editing</span>
-        <button @click="onSubmit">Create</button>
+  <div
+    class='modal'
+    @blur="changeOpen">
+    <form @submit.prevent='onSubmit'>
+      <p>Add card</p>
+      <span v-if='!title'>Enter title</span>
+      <div v-if='getState("error") && !title'>
+        <input
+          class='error'
+          placeholder="Fill this line!">
+      </div>
+      <div
+        v-else
+        v-bind:class='{ title: title }'
+        class="empty"
+        contenteditable="true"
+        @keydown.enter="updateTask($event)"
+        @blur="updateTask($event)">
+        {{title}}
+      </div>
+    </form>
+    <c-add-todo
+      @add-content='addContent'
+      v-bind:length='contents.length' />
+    <div class='scroll'>
+      <div
+        v-bind:key='i'
+        v-for='(td, i) of contents'>
+        <c-todo-item
+          v-bind:td='td'
+          v-bind:index='i'
+          v-bind:checkbox='true'
+          @remove-todo='removeTodo'/>
+      </div>
     </div>
+    <span v-if='contents.length'>Click on the text for editing</span>
+    <button @click="onSubmit">
+      Create
+    </button>
+  </div>
 </template>
 
 <script>
-import AddTodo from '@/components/AddTodo'
-import TodoItem from '@/components/TodoItem'
-import {mapActions, mapMutations, mapGetters} from 'vuex'
+  import {mapActions, mapMutations, mapGetters} from 'vuex'
 
-export default {
+  export default {
     data(){
-        return {
-            contents: [],
-            title: ''
-        }
+      return {
+        contents: [],
+        title: ''
+      }
     },
 
     computed: mapGetters(['getState']),
 
     methods: {
-        ...mapActions(['addTodo']),
-        ...mapMutations(['changeOpen', 'changeError']),
+      ...mapActions(['addTodo']),
+      ...mapMutations(['changeOpen', 'changeError']),
 
-        // Adding TodoBox title
-        addContent(content){
-            this.contents.push(content)
-        },
+      // Adding TodoBox title
+      addContent(content){
+        this.contents.push(content)
+      },
 
-        // Create TodoBox with Todo tasks
-        onSubmit(){
-            if(!this.title){
-                return this.changeError()
-            }
-            const payload = {title: this.title, content: this.contents}
-            this.addTodo(payload)
-            this.title = ''
-            this.contents = []
-        },
-
-        updateTask(e){
-            e.preventDefault();
-            if(e.target.innerText.length === 0){
-                this.changeError()
-            }
-            this.title = e.target.innerText;
-            e.target.blur();
-        },
-
-        // Delete exact Todo task
-        removeTodo(id){
-        this.contents = this.contents.filter(t=> t.id !== id)
+      // Create TodoBox with Todo tasks
+      onSubmit(){
+        if(!this.title){
+          return this.changeError()
         }
-    },
+        const payload = {title: this.title, content: this.contents}
+        this.addTodo(payload)
+        this.title = ''
+        this.contents = []
+      },
 
-    components:{
-        AddTodo, TodoItem
+      updateTask(e){
+        e.preventDefault();
+        if(e.target.innerText.length === 0){
+          this.changeError()
+        }
+        this.title = e.target.innerText;
+        e.target.blur();
+      },
+
+      // Delete exact Todo task
+      removeTodo(id){
+        this.contents = this.contents.filter(t=> t.id !== id)
+      }
     }
-}
+  }
 </script>
 
 <style scoped>

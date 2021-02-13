@@ -1,125 +1,133 @@
 <template>
   <div class="edition">
     <h1>Editing your Todo Task</h1>
-    <Popup       
+    <c-popup
       v-if='getState("popup")'
       v-bind:type='type'
       v-bind:id='contents.id'
-      @get-initial='getInitial'
-    />
+      @get-initial='getInitial'/>
     <div class='content'>
-      <AddTodo @add-content='addContent' />
+      <c-add-todo @add-content='addContent' />
       <div class='title-box'>
         <span
-          class="title" 
-          contenteditable="true" 
+          class="title"
+          contenteditable="true"
           @keydown.enter="updateTask($event)"
-          @blur="updateTask($event)"
-          >{{contents.title}}</span>
+          @blur="updateTask($event)">{{contents.title}}</span>
       </div>
-      <div v-for='(item, i) in contents.content' v-bind:key='i'>
-          <TodoItem
-              v-bind:td='item'
-              v-bind:checkbox='true'
-              @remove-todo='removeTodo'
-            />
+      <div
+        v-for='(item, i) in contents.content'
+        v-bind:key='i'>
+        <c-todo-item
+          v-bind:td='item'
+          v-bind:checkbox='true'
+          @remove-todo='removeTodo'/>
       </div>
       <span class='hint'>Click on the text for editing</span>
       <div class='buttons'>
-        <button class='delete' @click="changeType('delete')">delete</button>
+        <button
+          class='delete'
+          @click="changeType('delete')">
+          delete
+        </button>
         <div class='backup-box'>
-          <button class='cancel' @click="changeType('cancel')">cancel changes</button>
-          <button v-if='getState("backup")' class='backup' @click='backup'>click to return changes</button>
+          <button
+            class='cancel'
+            @click="changeType('cancel')">
+            cancel changes
+          </button>
+          <button
+            v-if='getState("backup")'
+            class='backup' @click='backup'>
+            click to return changes
+          </button>
         </div>
-        <button class='cancel' @click="saveBtn()">save</button>
+        <button
+          class='cancel'
+          @click="saveBtn">
+          save
+        </button>
       </div>
     </div>
   </div>
 </template>
 
 <script>
-import TodoItem from '@/components/TodoItem'
-import AddTodo from '@/components/AddTodo'
-import Popup from '@/components/Popup'
-import {mapMutations, mapGetters} from 'vuex'
+  import {mapMutations, mapGetters} from 'vuex'
 
-export default {
+  export default {
     data(){
       return {
         contents: [],
         beforeChanging: '',
         type: ''
       }
-  },
-
-  created(){
-    this.contents = JSON.parse(localStorage.getItem('localtodo'))
-    this.beforeChanging = this.contents.title
-  },
-
-  computed: mapGetters(['getState']),
-
-  methods: {
-    ...mapMutations(['saveTodo', 'changePopup', 'changeTemp', 'changeBackup']),
-
-    // Add new Todo tasks to TodoBox
-    addContent(content){
-        this.contents.content.push(content)
     },
 
-    // Update Todo title value
-    updateTask(e){
-      e.preventDefault();
-      if(e.target.innerText.length === 0){
-        e.target.innerText = this.beforeChanging
-      }
-      this.contents.title = e.target.innerText;
-      e.target.blur();
-    },
-
-    // Remove exact Todo task
-    removeTodo(id) {
-      this.contents.content = this.contents.content.filter(t => t.id !== id)
-    },
-
-    // Save changes to the Store and redirect to main page
-    saveBtn(){
-      this.changeBackup(false)
-      this.saveTodo(this.contents)
-      this.$router.push('/')
-
-      // Reset temp changes
-      this.changeTemp([])
-    },
-
-    // Change local type of button for passing it to Popup notification
-    changeType(type){
-      if(type === 'delete') this.type = 'delete'
-      else if (type = 'cancel'){
-        this.type = 'cancel'
-
-        // Save temp changes for possibility return them
-        this.changeTemp(this.contents)
-      }
-      this.changePopup()
-    },
-
-    // Backup handler - return canceled changes
-    backup(){
-      this.contents = this.getState('temp')
-      this.changeBackup(false)
-    },
-    
-    // Set previous/saved value of TodoBox
-    getInitial(){
+    created(){
       this.contents = JSON.parse(localStorage.getItem('localtodo'))
-    }
-  },
+      this.beforeChanging = this.contents.title
+    },
 
-  components: {
-    TodoItem, AddTodo, Popup
+    computed: mapGetters(['getState']),
+
+    methods: {
+      ...mapMutations(['saveTodo', 'changePopup', 'changeTemp', 'changeBackup']),
+
+      // Add new Todo tasks to TodoBox
+      addContent(content){
+        this.contents.content.push(content)
+      },
+
+      // Update Todo title value
+      updateTask(e){
+        e.preventDefault();
+        if(e.target.innerText.length === 0){
+          e.target.innerText = this.beforeChanging
+        }
+        this.contents.title = e.target.innerText;
+        e.target.blur();
+      },
+
+      // Remove exact Todo task
+      removeTodo(id) {
+        this.contents.content = this.contents.content.filter(t => t.id !== id)
+      },
+
+      // Save changes to the Store and redirect to main page
+      saveBtn(){
+        this.changeBackup(false)
+        this.saveTodo(this.contents)
+        this.$router.push('/')
+
+        // Reset temp changes
+        this.changeTemp([])
+      },
+
+      // Change local type of button for passing it to Popup notification
+      changeType(type){
+        if(type === 'delete') this.type = 'delete'
+        else if (type = 'cancel'){
+          this.type = 'cancel'
+
+          // Save temp changes for possibility return them
+          this.changeTemp(this.contents)
+        }
+        this.changePopup()
+      },
+
+      // Backup handler - return canceled changes
+      backup(){
+        this.contents = this.getState('temp')
+        this.changeBackup(false)
+      },
+
+      // Set previous/saved value of TodoBox
+      getInitial(){
+        this.contents = JSON.parse(localStorage.getItem('localtodo'))
+      }
+    }
   }
-}
 </script>
 
 <style scoped>

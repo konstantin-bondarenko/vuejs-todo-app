@@ -1,53 +1,59 @@
 <template>
-    <form @submit.prevent="onSubmit">
-        <input 
-            v-if='getState("error") && 
-            !length &&
-            (content.trim().length > 30 || !content.trim().length)' 
-            class='error' placeholder='Please enter letters (max 30)'>
-        <div v-else class='flex'>
-            <input 
-                type='text' 
-                v-model='content' 
-                placeholder='Write your task and press Enter'>
-            <button v-bind:class='{show: content.length}' type='submit' class='cross-add'>+</button>
-        </div>
-    </form>
+  <form @submit.prevent="onSubmit">
+    <input
+      v-if='getState("error") &&
+        !length &&
+        (content.trim().length > 30 || !content.trim().length)'
+      class='error' placeholder='Please enter letters (max 30)'>
+    <div
+      v-else
+      class='flex'>
+      <input
+        type='text'
+        v-model='content'
+        placeholder='Write your task and press Enter'>
+      <button
+        v-bind:class='{ show: content.length }'
+        type='submit' class='cross-add'>
+        +
+      </button>
+    </div>
+  </form>
 </template>
 
 <script>
-import {mapGetters, mapMutations} from 'vuex'
+  import {mapGetters, mapMutations} from 'vuex'
 
-export default {
+  export default {
     props: ['length'],
 
     data() {
-        return {
-            content: ''
-        }
+      return {
+        content: ''
+      }
     },
 
     computed: mapGetters(['getState']),
 
     methods: {
-        ...mapMutations(['changeError']),
-        
-        // Create Todo task
-        onSubmit(){
-            if(this.content.trim() && this.content.trim().length <= 30){
-                const newTodo = {
-                    id: Date.now(),
-                    content: this.content,
-                    completed: false,
-                }
-                this.$emit('add-content', newTodo)
-                this.content = ''
-            }else{
-                this.changeError()
-            }
+      ...mapMutations(['changeError']),
+
+      // Create Todo task
+      onSubmit(){
+        if(this.content.trim() && this.content.trim().length <= 30){
+          const newTodo = {
+            id: Date.now(),
+            content: this.content,
+            completed: false
+          }
+          this.$emit('add-content', newTodo)
+          this.content = ''
+        }else{
+          this.changeError()
         }
+      }
     }
-}
+  }
 </script>
 
 <style scoped>
@@ -76,7 +82,7 @@ export default {
         cursor: pointer;
         border: none;
         background: none;
-        color: rgba(0,0,0,.9);    
+        color: rgba(0,0,0,.9);
     }
     .flex{
         display: flex;

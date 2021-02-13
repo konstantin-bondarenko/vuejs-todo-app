@@ -1,58 +1,60 @@
 <template>
-    <div class='item' v-bind:class='{done: td.completed}'>
-        <div class='flex'>
-            <div class='content'>
-                <button class="checkbox"
-                    v-bind:class='{checked: td.completed}'
-                    v-if='checkbox'
-                    @click='td.completed = !td.completed'></button>
-                <div>
-                    <span
-                        v-if='checkbox' 
-                        class="title" 
-                        contenteditable="true"
-                        @keydown.enter="updateTask($event, td)"
-                        @blur="updateTask($event, td)"
-                        >{{td.content}}</span>
-                    <span v-else>{{td.content}}</span>
-                </div>
-            </div>
-            <button 
-                class='remove-btn'
-                v-if='checkbox'
-                @click="$emit('remove-todo',td.id)">&times;</button>
+  <div
+    class='item'
+    v-bind:class='{ done: td.completed }'>
+    <div class='flex'>
+      <div class='content'>
+        <button
+          class="checkbox"
+          v-bind:class='{ checked: td.completed }'
+          v-if='checkbox'
+          @click='td.completed = !td.completed'></button>
+        <div>
+          <span
+            v-if='checkbox'
+            class="title"
+            contenteditable="true"
+            @keydown.enter="updateTask($event, td)"
+            @blur="updateTask($event, td)">{{td.content}}</span>
+          <span v-else>{{td.content}}</span>
         </div>
+      </div>
+      <button
+        class='remove-btn'
+        v-if='checkbox'
+        @click="$emit('remove-todo',td.id)">&times;</button>
     </div>
+  </div>
 </template>
 
 <script>
-export default {
+  export default {
     props: ['td', 'checkbox'],
 
     data(){
-        return {
-            beforeChange: ''
-        }
+      return {
+        beforeChange: ''
+      }
     },
 
     created(){
-        this.beforeChange = this.td.content || ''
+      this.beforeChange = this.td.content || ''
     },
 
     methods: {
 
-        // Update Todo task value
-        updateTask(e, td){
-            e.preventDefault();
-            if(e.target.innerText.length === 0){
-                e.target.innerText = this.beforeChange
-            }
-            td.content = e.target.innerText;
-
-            e.target.blur();
+      // Update Todo task value
+      updateTask(e, td){
+        e.preventDefault();
+        if(e.target.innerText.length === 0){
+          e.target.innerText = this.beforeChange
         }
+        td.content = e.target.innerText;
+
+        e.target.blur();
+      }
     }
-}
+  }
 </script>
 
 <style scoped>
@@ -63,11 +65,11 @@ export default {
         border-radius: 10px;
         width: 90%;
         overflow: hidden;
-    }    
+    }
     .done{
         background: rgba(0,0,0,.5);
         color: #fff;
-    } 
+    }
     .flex{
         display: flex;
         align-items: center;
