@@ -1,10 +1,10 @@
 <template>
   <div class="default-layout">
-    <c-backdrop v-if='getState("open") || getState("popup")' />
+    <c-backdrop v-if="getState('open') || getState('popup')" />
     <button
-      v-if='this.$route.path !== "/"'
-      class='default-layout-link'
-      @click='routeTo'>
+      v-if="this.$route.path !== '/'"
+      class="default-layout-link"
+      @click="routeTo">
       Return to Todo List
     </button>
     <slot />
@@ -36,9 +36,8 @@
 <style lang="scss" scoped>
   .default-layout {
     background: linear-gradient(120deg, #487eb0, #fbc531);
-    height: 100vh;
-    text-align: center;
-    /* color: #2c3e50; */
+    height: 100%;
+    min-height: 100vh;
 
     &-link {
       width: 300px;

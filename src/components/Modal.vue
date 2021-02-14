@@ -1,41 +1,34 @@
 <template>
   <div
-    class='modal'
+    :class="{ 'modal-container-empty': !contents.length }"
+    class="modal-container"
     @blur="toggleOpen">
-    <form @submit.prevent='onSubmit'>
-      <p>Add card</p>
-      <span v-if='!title'>Enter title</span>
-      <div v-if='getState("error") && !title'>
+    <p class="modal-container-title">Add card</p>
+    <div class="modal-container-forms">
+      <form @submit.prevent="onSubmit">
         <input
-          class='error'
-          placeholder="Fill this line!">
-      </div>
-      <div
-        v-else
-        v-bind:class='{ title: title }'
-        class="empty"
-        contenteditable="true"
-        @keydown.enter="updateTask($event)"
-        @blur="updateTask($event)">
-        {{title}}
-      </div>
-    </form>
-    <c-add-todo
-      @add-content='addContent'
-      v-bind:length='contents.length' />
-    <div class='scroll'>
-      <div
-        v-bind:key='i'
-        v-for='(td, i) of contents'>
-        <c-todo-item
-          v-bind:td='td'
-          v-bind:index='i'
-          v-bind:checkbox='true'
-          @remove-todo='removeTodo'/>
-      </div>
+          v-model="title"
+          class="modal-container-forms-input"
+          placeholder="Enter title">
+      </form>
+      <c-add-todo
+        @add-content="addContent"
+        :length="contents.length" />
     </div>
-    <span v-if='contents.length'>Click on the text for editing</span>
-    <button @click="onSubmit">
+    <div
+      v-if="contents.length"
+      class="modal-container-todos">
+      <c-todo-item
+        v-for="(td, index) of contents"
+        :key="'c-todo-item-' + index"
+        :todoItem="td"
+        :index="index"
+        :checkbox="true"
+        @remove-todo="removeTodo"/>
+    </div>
+    <button
+      class="modal-container-btn"
+      @click="onSubmit">
       Create
     </button>
   </div>
@@ -71,6 +64,8 @@
         this.addTodo(payload)
         this.title = ''
         this.contents = []
+
+        this.toggleOpen()
       },
 
       updateTask(e){
@@ -90,59 +85,56 @@
   }
 </script>
 
-<style scoped>
-    .modal{
-        left: 0;
-        right: 0;
-        margin: auto;
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        justify-content: space-around;
-        position: absolute;
-        border-radius: 10px;
-        width: 400px;
-        max-height: 600px;
-        z-index: 100;
-        background: rgba(255, 255, 255, .9);
-    }
-    .modal button, input, .empty, .title:focus{
-        border: none;
-        background: none;
-        outline: none;
-    }
-    input, .empty, .title:focus{
-        width: 230px;
-        border-bottom: 2px solid #000;
-        padding: 10px;
-    }
-    .modal button{
-        margin: 20px 0;
-        width: 100px;
-        height: 20px;
-        font-size: 20px;
-        cursor: pointer;
-        color: rgba(0,0,0,.9);
-    }
-    .modal span{
-        color: rgba(0,0,0,.5);
-    }
-    .title{
-        border: none;
-        font-size: 24px;
-        margin: 10px 0;
-    }
-    .scroll{
-        width: 100%;
-        overflow-y: scroll;
-    }
-    .error::placeholder{
-        color: red;
+<style lang="scss" scoped>
+  .modal-container {
+    left: 50%;
+    top: 30%;
+    transform: translate(-50%, -30%);
+    padding: 32px;
+    display: grid;
+    grid-template: 24px auto auto 20px / auto;
+    grid-gap: 24px;
+    place-items: center;
+    position: fixed;
+    border-radius: 10px;
+    width: 400px;
+    max-height: 600px;
+    z-index: 100;
+    background: rgba(255, 255, 255, .9);
+
+    &-empty {
+      grid-template: 24px auto 20px / auto;
     }
 
-    @media screen and (max-width: 415px) {
-        .modal{
-            width: 300px;
-        }
+    &-title {
+      font-size: 24px;
     }
+
+    &-forms {
+      width: 100%;
+
+      &-input {
+        width: 100%;
+        border-bottom: 1px solid #000;
+        padding: 10px;
+        outline: none;
+        background: none;
+      }
+    }
+
+    &-todos {
+      width: 100%;
+      max-height: 300px;
+      overflow-y: auto;
+      display: grid;
+      grid-gap: 8px;
+    }
+
+    &-btn {
+      width: 100px;
+      height: 20px;
+      font-size: 20px;
+      color: rgba(0,0,0,.9);
+    }
+  }
 </style>

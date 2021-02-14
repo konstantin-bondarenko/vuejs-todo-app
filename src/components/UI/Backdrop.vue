@@ -1,22 +1,22 @@
 <template>
   <div
-    class='backdrop'
-    @click='toggle' />
+    class="backdrop"
+    @click="toggle" />
 </template>
 
 <script>
-  import {mapMutations, mapGetters} from 'vuex'
+  import {mapActions, mapGetters} from 'vuex'
 
   export default {
     computed: mapGetters(['getState']),
 
     methods: {
-      ...mapMutations(['changeOpen', 'changePopup']),
+      ...mapActions(['toggleOpen', 'togglePopup']),
 
       // Hide Backdrop and Popup notification
       toggle(){
-        if(this.getState('open')) this.changeOpen()
-        else this.changePopup()
+        if(this.getState('open')) this.toggleOpen()
+        else this.togglePopup()
       }
     }
   }

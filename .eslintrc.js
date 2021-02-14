@@ -86,6 +86,7 @@ module.exports = {
     'vue/space-infix-ops': 'error',
     'vue/space-unary-ops': 'error',
     'vue/v-on-function-call': 'error',
+    "vue/html-quotes": ["error", "double"],
     'vue/script-indent': ['error', 2, {
       baseIndent: 1,
       switchCase: 1,

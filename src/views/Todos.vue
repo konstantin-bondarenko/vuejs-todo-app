@@ -1,19 +1,20 @@
 <template>
   <div class="todo-page">
-    <h2 class="todo-page-title">
-      ToDo application
-    </h2>
-    <button
-      class="todo-page-btn"
-      @click="toggleOpen">
-      CREATE
-    </button>
+    <div class="todo-page-header">
+      <h1 class="todo-page-header-title">
+        ToDo application
+      </h1>
+      <button
+        class="todo-page-header-btn"
+        @click="toggleOpen">
+        CREATE
+      </button>
+    </div>
     <c-popup
       v-if="getState('popup')"
       type="delete"
       :id="id"/>
-    <c-modal
-      v-if="getState('open')"/>
+    <c-modal v-if="getState('open')"/>
     <div class="todo-page-box-container">
       <c-todo-box
         v-for="(todo, index) of getState('todos')"
@@ -53,12 +54,17 @@
   .todo-page {
     padding: 16px 0;
 
-    &-btn {
-      width: 150px;
-      height: 50px;
-      color: rgba(255, 255, 255, .5);
-      font-size: 24px;
+    &-header {
+      text-align: center;
+
+      &-btn {
+        width: 150px;
+        height: 50px;
+        color: rgba(255, 255, 255, .5);
+        font-size: 24px;
+      }
     }
+
 
     &-box-container {
       display: grid;

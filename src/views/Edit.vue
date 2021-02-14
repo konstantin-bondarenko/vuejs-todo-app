@@ -1,53 +1,53 @@
 <template>
-  <div class="edition">
-    <h1>Editing your Todo Task</h1>
-    <c-popup
-      v-if='getState("popup")'
-      v-bind:type='type'
-      v-bind:id='contents.id'
-      @get-initial='getInitial'/>
-    <div class='content'>
-      <c-add-todo @add-content='addContent' />
-      <div class='title-box'>
-        <span
-          class="title"
-          contenteditable="true"
-          @keydown.enter="updateTask($event)"
-          @blur="updateTask($event)">{{contents.title}}</span>
-      </div>
+  <div class="edit-page">
+    <div class="edit-page-header">
+      <h1 class="edit-page-header-title">
+        Editing your Todo Task
+      </h1>
       <div
-        v-for='(item, i) in contents.content'
-        v-bind:key='i'>
-        <c-todo-item
-          v-bind:td='item'
-          v-bind:checkbox='true'
-          @remove-todo='removeTodo'/>
+        class="edit-page-header-todo-title"
+        contenteditable="true"
+        @keydown.enter="updateTask($event)"
+        @blur="updateTask($event)">
+        {{contents.title}}
       </div>
-      <span class='hint'>Click on the text for editing</span>
-      <div class='buttons'>
-        <button
-          class='delete'
-          @click="changeType('delete')">
-          delete
-        </button>
-        <div class='backup-box'>
-          <button
-            class='cancel'
-            @click="changeType('cancel')">
-            cancel changes
-          </button>
-          <button
-            v-if='getState("backup")'
-            class='backup' @click='backup'>
-            click to return changes
-          </button>
-        </div>
-        <button
-          class='cancel'
-          @click="saveBtn">
-          save
-        </button>
-      </div>
+    </div>
+    <c-popup
+      v-if="getState('popup')"
+      :type="type"
+      :id="contents.id"
+      @get-initial="getInitial"/>
+    <div class="edit-page-content">
+      <c-add-todo @add-content="addContent" />
+      <c-todo-item
+        v-for="(item, index) in contents.content"
+        :key="'c-todo-item' + index"
+        :todoItem="item"
+        :checkbox="true"
+        @remove-todo="removeTodo"/>
+    </div>
+    <div class="edit-page-nav">
+      <button
+        class="edit-page-nav-del"
+        @click="changeType('delete')">
+        delete
+      </button>
+      <button
+        class="edit-page-nav-cancel"
+        @click="changeType('cancel')">
+        cancel changes
+      </button>
+      <button
+        v-if="getState('backup')"
+        class="edit-page-nav-backup"
+        @click="backup">
+        click to return changes
+      </button>
+      <button
+        class="edit-page-nav-save"
+        @click="saveBtn">
+        save
+      </button>
     </div>
   </div>
 </template>
@@ -130,62 +130,49 @@
   }
 </script>
 
-<style scoped>
-  .edition{
+<style lang="scss" scoped>
+  .edit-page {
+    display: grid;
+    grid-gap: 24px;
     margin: 0 auto;
-    width: 100%;
-  }
-  .content{
-    border: 1px solid #ccc;
-    border-radius: 20px;
-    width: 70%;
-    margin: 10px auto;
-  }
-  .hint{
-    color: rgba(0,0,0,.5);
-  }
-  .title-box{
-    font-size: 24px;
-    margin: 20px 0;
-  }
-  .title:focus{
-    width: 230px;
-    border: none;
-    border-bottom: 2px solid #000;
-    background: none;
-    padding: 10px;
-    outline: none;
-  }
-  .buttons{
-    display: flex;
-    justify-content: center;
-    margin: 10px;
-  }
-  .buttons button{
-    margin: 20px 0;
-    width: 100px;
-    height: 20px;
-    outline: none;
-    font-size: 24px;
-    cursor: pointer;
-    background: none;
-    border: none;
-  }
-  .backup-box{
-    display: flex;
-    flex-direction: column;
-  }
-  .backup-box button{
-    width: 200px;
-  }
-  .backup-box .backup{
-    font-size: 12px;
-    margin: 5px 0;
-  }
-  .cancel{
-    color: rgba(255, 255, 255, .5);
-  }
-  .delete{
-    color: rgba(0,0,0,.5);
+    max-width: 800px;
+
+    &-header {
+      text-align: center;
+      display: grid;
+      grid-gap: 24px;
+
+      /* &-title {
+
+      } */
+
+      &-todo-title {
+        font-size: 24px;
+        outline: none;
+      }
+    }
+
+    &-content {
+      display: grid;
+      grid-gap: 12px;
+    }
+
+    &-nav {
+      display: grid;
+      grid-template: auto / repeat(3, auto);
+      grid-gap: 12px;
+
+      &-backup {
+        grid-area: 2 / 2 / 2 / 2;
+        font-size: 16px !important;
+        color: rgba(0,0,0,.5);
+      }
+    }
+
+    &-nav button {
+      width: auto;
+      height: 24px;
+      font-size: 24px;
+    }
   }
 </style>

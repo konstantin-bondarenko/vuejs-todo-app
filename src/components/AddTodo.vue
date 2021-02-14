@@ -1,23 +1,14 @@
 <template>
-  <form @submit.prevent="onSubmit">
+  <form
+    @submit.prevent="onSubmit"
+    class="add-todo-form">
     <input
-      v-if='getState("error") &&
-        !length &&
-        (content.trim().length > 30 || !content.trim().length)'
-      class='error' placeholder='Please enter letters (max 30)'>
-    <div
-      v-else
-      class='flex'>
-      <input
-        type='text'
-        v-model='content'
-        placeholder='Write your task and press Enter'>
-      <button
-        v-bind:class='{ show: content.length }'
-        type='submit' class='cross-add'>
-        +
-      </button>
-    </div>
+      v-model="content"
+      placeholder="Write your task and press Enter"
+      class="add-todo-form-input">
+    <button
+      type="submit"
+      class="add-todo-form-btn"/>
   </form>
 </template>
 
@@ -25,7 +16,9 @@
   import {mapGetters, mapActions} from 'vuex'
 
   export default {
-    props: ['length'],
+    props: {
+      length: Number
+    },
 
     data() {
       return {
@@ -33,7 +26,13 @@
       }
     },
 
-    computed: mapGetters(['getState']),
+    computed: {
+      ...mapGetters(['getState']),
+
+      showInput () {
+        return this.getState('error') && !this.length && (this.content.trim().length > 30 || !this.content.trim().length)
+      }
+    },
 
     methods: {
       ...mapActions(['toggleError']),
@@ -56,49 +55,39 @@
   }
 </script>
 
-<style scoped>
-    form {
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        justify-content: center;
-        margin: 10px 0;
+<style lang="scss" scoped>
+  .add-todo-form {
+    display: grid;
+    grid-template: auto / auto 30px;
+    grid-gap: 4px;
+    place-items: center;
+
+    &-input {
+      width: 100%;
+      border-bottom: 1px solid #000;
+      padding: 10px;
+      background: none;
+      outline: none;
     }
-    input{
-        width: 230px;
-        border: none;
-        border-bottom: 2px solid #000;
-        background: none;
-        padding: 10px;
-        outline: none;
-        font-size: 14px;
+
+    &-btn {
+      font-size: 20px;
+      color: rgba(0,0,0,.9);
+      background: rgba(0,0,0,.3);
+      width: 30px;
+      height: 30px;
+      border-radius: 50%;
+      position: relative;
     }
-    button{
-        margin: 10px 0;
-        width: 100px;
-        height: 20px;
-        outline: none;
-        font-size: 20px;
-        cursor: pointer;
-        border: none;
-        background: none;
-        color: rgba(0,0,0,.9);
+
+    &-btn:after {
+      content: '+';
+      position: absolute;
+      height: 25px;
+      left: 50%;
+      top: 50%;
+      transform: translate(-50%, -50%);
+      display: inline-block;
     }
-    .flex{
-        display: flex;
-        height: 40px;
-    }
-    .cross-add{
-        display: none;
-        background: rgba(0,0,0,.3);
-        width: 30px;
-        height: 30px;
-        border-radius: 20px;
-    }
-    .show{
-        display: block;
-    }
-    .error::placeholder{
-        color: red;
-    }
+  }
 </style>
