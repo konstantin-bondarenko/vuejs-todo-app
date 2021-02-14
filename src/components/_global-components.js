@@ -18,26 +18,14 @@ const requireComponent = require.context(
 requireComponent.keys().forEach((fileName) => {
   // Get the component config
   const componentConfig = requireComponent(fileName)
-  // Get the PascalCase version of the component name
-
   const componentName = fileName
     // Remove the "./_" from the beginning
-    // .replace(/^\.\/_/, '')
-    // // Remove the file extension from the end
-    // .replace(/\.\w+$/, '')
-    // // Split up kebabs
-    // .split('-')
-    // // Upper case
-    // .map((kebab) => kebab.charAt(0).toUpperCase() + kebab.slice(1))
-    // // Concatenated
-    // .join('')
     .split('/')
     .pop()
+    // Split up kebabs
     .replace(/\B([A-Z])/g, '-$1').toLowerCase()
-    // .map((kebab) => kebab.charAt(0).toLowerCase() + kebab.slice(1))
-    .replace(/\.\w+$/, '') // remove file extension
-
-    console.log('Component name', `c-${componentName}`)
+    // Remove file extension
+    .replace(/\.\w+$/, '')
 
   // Globally register the component
   Vue.component(`c-${componentName}`, componentConfig.default || componentConfig)

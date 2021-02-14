@@ -1,7 +1,7 @@
 <template>
   <div
     class='modal'
-    @blur="changeOpen">
+    @blur="toggleOpen">
     <form @submit.prevent='onSubmit'>
       <p>Add card</p>
       <span v-if='!title'>Enter title</span>
@@ -42,7 +42,7 @@
 </template>
 
 <script>
-  import {mapActions, mapMutations, mapGetters} from 'vuex'
+  import {mapActions, mapGetters} from 'vuex'
 
   export default {
     data(){
@@ -55,8 +55,7 @@
     computed: mapGetters(['getState']),
 
     methods: {
-      ...mapActions(['addTodo']),
-      ...mapMutations(['changeOpen', 'changeError']),
+      ...mapActions(['addTodo', 'toggleOpen', 'toggleError']),
 
       // Adding TodoBox title
       addContent(content){
@@ -66,7 +65,7 @@
       // Create TodoBox with Todo tasks
       onSubmit(){
         if(!this.title){
-          return this.changeError()
+          return this.toggleError()
         }
         const payload = {title: this.title, content: this.contents}
         this.addTodo(payload)
@@ -77,7 +76,7 @@
       updateTask(e){
         e.preventDefault();
         if(e.target.innerText.length === 0){
-          this.changeError()
+          this.toggleError()
         }
         this.title = e.target.innerText;
         e.target.blur();

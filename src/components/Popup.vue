@@ -4,7 +4,7 @@
     <div class='buttons'>
       <button
         class='cancel'
-        @click="changePopup(id)">
+        @click="togglePopup(id)">
         Cancel
       </button>
       <button
@@ -17,33 +17,33 @@
 </template>
 
 <script>
-  import {mapMutations} from 'vuex'
+  import {mapActions} from 'vuex'
 
   export default {
     props: ['type', 'id'],
 
     methods: {
-      ...mapMutations(['changePopup', 'deleteTodoBox', 'initialState', 'changeBackup', 'changeTemp']),
+      ...mapActions(['togglePopup', 'deleteTodoBox', 'getPreviousTodos', 'setBackup', 'setTemp']),
 
       // Check for type of button click
       popupBtns(type){
-        this.changePopup(this.id)
+        this.togglePopup(this.id)
 
         // Delete exact TodoBox
         if(type === 'delete'){
           this.deleteTodoBox()
-          this.changeBackup(false)
-          this.changeTemp([])
+          this.setBackup(false)
+          this.setTemp([])
           if (this.$route.path !== '/') this.$router.push('/')
         }else if (type === 'cancel'){
 
           // Canceling changes in editing page
           this.$emit('get-initial')
-          this.changeBackup(true)
+          this.setBackup(true)
         }
 
         // Set previous/saved state of Todos
-        // this.initialState()
+        // this.getPreviousTodos()
       }
     }
   }

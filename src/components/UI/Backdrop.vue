@@ -1,7 +1,7 @@
 <template>
   <div
-    id='backdrop'
-    @click='toggle'></div>
+    class='backdrop'
+    @click='toggle' />
 </template>
 
 <script>
@@ -22,15 +22,12 @@
   }
 </script>
 
-<style scoped>
-    #backdrop{
-        padding: 0;
-        margin: 0;
-        width: 100%;
-        min-height: 150%;
-        background-color: rgba(0,0,0, .5);
-        position: fixed;
-        z-index: 99;
-    }
-
+<style lang="scss" scoped>
+  .backdrop{
+    width: 100%;
+    min-height: 100%;
+    background-color: rgba(0,0,0, .5);
+    position: fixed;
+    z-index: 99;
+  }
 </style>

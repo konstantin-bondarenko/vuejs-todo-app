@@ -1,21 +1,21 @@
 <template>
-  <div class='box'>
-    <h3>{{ todo.title }}</h3>
-    <div
-      v-for='(item, i) in todo.content'
-      v-bind:key='i'>
-      <c-todo-item
-        v-bind:td='item'
-        v-bind:checkbox='false'/>
-    </div>
-    <div class='buttons'>
+  <div class="box-item">
+    <h3 class="box-item-title">
+      {{ todo.title }}
+    </h3>
+    <c-todo-item
+      v-for="(item, index) in todo.content"
+      :key="'todo-item-' + index"
+      :td="item"
+      :checkbox="false"/>
+    <div class="box-item-buttons">
       <button
-        class='edit'
+        class="box-item-buttons-edit"
         @click='toEdit(todo)'>
         EDIT
       </button>
       <button
-        class='delete'
+        class="box-item-buttons-del"
         @click="$emit('recive-id', todo.id)">
         DELETE
       </button>
@@ -25,52 +25,56 @@
 </template>
 
 <script>
-  import {mapMutations} from 'vuex'
+  import {mapActions} from 'vuex'
 
   export default {
-    props: ['todo'],
-
+    props: {
+      todo: Object
+    },
     methods: {
-      ...mapMutations(['changeEditing']),
+      ...mapActions(['setEditing']),
 
       // Redirect to Editing page and pass exact TodoBox
       toEdit(todo){
-        this.$router.push({ name: 'edit', params: todo})
-        this.changeEditing(todo)
+        this.$router.push({ name: 'nav.edit', params: todo})
+        this.setEditing(todo)
         localStorage.setItem('localtodo', JSON.stringify(todo))
       }
     }
   }
 </script>
 
-<style scoped>
-    .box{
-        width: 250px;
-        height: 100%;
-        border: 1px solid #ccc;
-        border-radius: 10px;
-        margin: 10px;
+<style lang="scss" scoped>
+  .box-item {
+    border: 1px solid #ccc;
+    border-radius: 10px;
+    padding: 16px;
+
+    &-title {
+      margin: 12px 0;
     }
-    .buttons{
-        display:flex;
-        justify-content: space-around;
-        align-items: center;
-        margin: 10px;
-    }
-    .buttons button{
-        margin: 10px 0;
+
+    &-buttons{
+      display:flex;
+      justify-content: space-around;
+      align-items: center;
+      margin: 12px;
+
+      &-edit, &-del {
+        margin: 12px 0;
         width: 100px;
         height: 20px;
-        outline: none;
         font-size: 16px;
-        cursor: pointer;
-        background: none;
-        border: none;
+      }
+
+      &-edit {
+          color: rgba(255, 255, 255, .5);
+      }
+
+      &-del {
+          color: rgba(0,0,0,.5);
+      }
     }
-    .edit{
-        color: rgba(255, 255, 255, .5);
-    }
-    .delete{
-        color: rgba(0,0,0,.5);
-    }
+  }
+
 </style>

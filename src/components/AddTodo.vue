@@ -22,7 +22,7 @@
 </template>
 
 <script>
-  import {mapGetters, mapMutations} from 'vuex'
+  import {mapGetters, mapActions} from 'vuex'
 
   export default {
     props: ['length'],
@@ -36,7 +36,7 @@
     computed: mapGetters(['getState']),
 
     methods: {
-      ...mapMutations(['changeError']),
+      ...mapActions(['toggleError']),
 
       // Create Todo task
       onSubmit(){
@@ -49,7 +49,7 @@
           this.$emit('add-content', newTodo)
           this.content = ''
         }else{
-          this.changeError()
+          this.toggleError()
         }
       }
     }

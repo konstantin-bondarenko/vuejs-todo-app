@@ -1,21 +1,25 @@
 <template>
-  <div>
-    <h2>ToDo application</h2>
-    <button @click='toggleOpen'>
+  <div class="todo-page">
+    <h2 class="todo-page-title">
+      ToDo application
+    </h2>
+    <button
+      class="todo-page-btn"
+      @click="toggleOpen">
       CREATE
     </button>
     <c-popup
-      v-if='getState("popup")'
-      v-bind:type="'delete'"
-      v-bind:id='id'/>
+      v-if="getState('popup')"
+      type="delete"
+      :id="id"/>
     <c-modal
-      v-if='getState("open")'/>
-    <div id='boxes'>
+      v-if="getState('open')"/>
+    <div class="todo-page-box-container">
       <c-todo-box
-        v-for='(todo, i) of getState("todos")'
-        v-bind:key='i'
-        v-bind:todo='todo'
-        @recive-id='reciveId'/>
+        v-for="(todo, index) of getState('todos')"
+        :key="'c-todo-box-' + index"
+        :todo="todo"
+        @recive-id="reciveId" />
     </div>
   </div>
 </template>
@@ -45,22 +49,23 @@
 </script>
 
 
-<style scoped>
-  button{
-    width: 150px;
-    height: 50px;
-    color: rgba(255, 255, 255, .5);
-    font-size: 24px;
-    background: none;
-    border: none;
-    outline: none;
-    cursor: pointer;
-  }
-  #boxes{
-    display: flex;
-    flex-wrap: wrap;
-    margin: 10px;
-    justify-content: center;
-  }
+<style lang="scss" scoped>
+  .todo-page {
+    padding: 16px 0;
 
+    &-btn {
+      width: 150px;
+      height: 50px;
+      color: rgba(255, 255, 255, .5);
+      font-size: 24px;
+    }
+
+    &-box-container {
+      display: grid;
+      grid-template: auto / repeat(auto-fit, 250px);
+      grid-gap: 24px;
+      place-content: center;
+      padding: 16px;
+    }
+  }
 </style>

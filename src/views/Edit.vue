@@ -53,7 +53,7 @@
 </template>
 
 <script>
-  import {mapMutations, mapGetters} from 'vuex'
+  import {mapActions, mapGetters} from 'vuex'
 
   export default {
     data(){
@@ -72,7 +72,7 @@
     computed: mapGetters(['getState']),
 
     methods: {
-      ...mapMutations(['saveTodo', 'changePopup', 'changeTemp', 'changeBackup']),
+      ...mapActions(['saveTodo', 'togglePopup', 'setTemp', 'setBackup']),
 
       // Add new Todo tasks to TodoBox
       addContent(content){
@@ -96,12 +96,12 @@
 
       // Save changes to the Store and redirect to main page
       saveBtn(){
-        this.changeBackup(false)
+        this.setBackup(false)
         this.saveTodo(this.contents)
         this.$router.push('/')
 
         // Reset temp changes
-        this.changeTemp([])
+        this.setTemp([])
       },
 
       // Change local type of button for passing it to Popup notification
@@ -111,15 +111,15 @@
           this.type = 'cancel'
 
           // Save temp changes for possibility return them
-          this.changeTemp(this.contents)
+          this.setTemp(this.contents)
         }
-        this.changePopup()
+        this.togglePopup()
       },
 
       // Backup handler - return canceled changes
       backup(){
         this.contents = this.getState('temp')
-        this.changeBackup(false)
+        this.setBackup(false)
       },
 
       // Set previous/saved value of TodoBox
